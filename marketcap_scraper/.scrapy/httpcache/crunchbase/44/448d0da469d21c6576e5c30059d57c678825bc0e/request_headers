@@ -1,0 +1,11 @@
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,it;q=0.5
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+Upgrade-Insecure-Requests: 1
+Sec-Ch-Ua: Google Chrome;v="88", "Chromium";v="88", ";Not A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: Windows
+Sec-Fetch-Site: none
+Sec-Fetch-Mod: 
+Sec-Fetch-User: ?1
+Accept-Encoding: gzip, deflate

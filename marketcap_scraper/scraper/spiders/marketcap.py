@@ -1,57 +1,51 @@
-import requests
 import scrapy
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from  scraper.items import MarketCapItem  # Import the MarketCapItem class
+import json
+import os
+import requests
 
 class MarketCapSpider(scrapy.Spider):
+    def __init__(self, *args, **kwargs):
+        super(MarketCapSpider, self).__init__(*args, **kwargs)
+        if 'start_urls' in kwargs:
+            self.start_urls = kwargs['start_urls']
+
     name = 'marketcap'
     allowed_domains = ['companiesmarketcap.com']
-    start_urls = ['https://companiesmarketcap.com/']
-    page_number = 1  # Initialize page number
 
     def parse(self, response):
-        """Parse the main page to get company URLs and follow pagination."""
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        # Extracting all company URLs on the page
-        div_tags = soup.find_all("div", class_="name-div")
-        for div_tag in div_tags:
-            anchor_tag = div_tag.find("a")
-            href_value = anchor_tag["href"]
-            full_url = urljoin(response.url, href_value)
-            yield scrapy.Request(full_url, callback=self.parse_company_page)
-
-        # Following pagination links up to page 50
-        if self.page_number < 50:
-            self.page_number += 1
-            next_page_url = f'https://companiesmarketcap.com/page/{self.page_number}/'
-            yield scrapy.Request(next_page_url, callback=self.parse)
-
-    def parse_company_page(self, response):
         """Parse each company's detailed page to extract information."""
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # Create a MarketCapItem instance
-        item = MarketCapItem()
+        # Extract company name
+        company_name = self.get_text(soup, "company-name")
 
-        # Extracting specific company information and assigning to item fields
-        item['Name'] = self.get_text(soup, "company-name")
-        item['Description'] = self.get_text(soup, "company-description")
-        item['Share_Price'] = self.get_share_price(soup)
-        item['MarketCap'] = self.get_market_cap(soup)
-        item['Country'] = self.get_country(soup)
+        # Create a dictionary to store data
+        data = {
+            'Name': company_name,
+            'Description': self.get_text(soup, "company-description"),
+            'Share_Price': self.get_share_price(soup),
+            'MarketCap': self.get_market_cap(soup),
+            'Country': self.get_country(soup),
+            'Revenue': self.get_additional_info(response.url, "revenue"),
+            'Price_to_earnings_ratio': self.get_additional_info(response.url, "pe-ratio"),
+            'Price_to_sales_ratio': self.get_additional_info(response.url, "ps-ratio"),
+            'Total_assets': self.get_additional_info(response.url, "total-assets"),
+            'Net_Asset': self.get_additional_info(response.url, "net-assets"),
+            'Total_Debt': self.get_additional_info(response.url, "total-debt")
+        }
 
-        # Collecting additional company metrics from other URLs
-        item['Revenue'] = self.get_additional_info(response.url, "revenue")
-        item['Price_to_earnings_ratio'] = self.get_additional_info(response.url, "pe-ratio")
-        item['Price_to_sales_ratio'] = self.get_additional_info(response.url, "ps-ratio")
-        item['Total_assets'] = self.get_additional_info(response.url, "total-assets")
-        item['Net_Asset'] = self.get_additional_info(response.url, "net-assets")
-        item['Total_Debt'] = self.get_additional_info(response.url, "total-debt")
+        # Create the directory if it doesn't exist
+        save_path = os.path.join(os.getcwd(), 'data', 'market_cap')
+        os.makedirs(save_path, exist_ok=True)
 
-        # Yielding the scraped data as a MarketCapItem
-        yield item
+        # Save data to a JSON file with the company name
+        filename = os.path.join(save_path, f'{company_name}.json')
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+        self.log(f'Saved file {filename}')
 
     def get_text(self, soup, div_class):
         """Helper method to extract text from a specific div class."""
@@ -103,7 +97,6 @@ class MarketCapSpider(scrapy.Spider):
         metric = metric.strip('/')
         cleaned_base_url = base_url.rsplit('/', 2)[0] + '/'
         additional_url = urljoin(cleaned_base_url, metric + '/')
-        print(f"Fetching URL: {additional_url}")
 
         try:
             response = requests.get(additional_url)

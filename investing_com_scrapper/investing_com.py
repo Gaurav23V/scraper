@@ -1,11 +1,13 @@
+# investing_com.py
+
 from zenrows import ZenRowsClient
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import os
 import json
+import sys
 from datetime import datetime
 
-# Create a single instance of ZenRowsClient outside the functions
 client = ZenRowsClient("14417c9ec1490878fd3a63511a237e8fc97591c5")
 
 def get_company_info(url):
@@ -35,11 +37,9 @@ def get_financial_summary(url):
     response = client.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
 
-    # Extract financial summary text
     financial_summary_span = soup.find("span", class_="text common-pre-text")
     financial_summary = financial_summary_span.text.strip() if financial_summary_span else "Financial summary not found"
 
-    # Initialize dictionary to store the financial details
     financial_details = {
         "total_revenue": None,
         "gross_profit": None,
@@ -50,18 +50,16 @@ def get_financial_summary(url):
         "total_equity": None
     }
 
-    # CSS selectors for the financial details
     css_selectors = {
-        "total_revenue": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > span.text',
-        "gross_profit": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > span.text',
-        "operating_income": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(3) > td:nth-of-type(2) > span.text',
-        "net_income": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(4) > td:nth-of-type(2) > span.text',
-        "total_assets": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section:nth-of-type(3) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > span.text',
-        "total_liability": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section:nth-of-type(3) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > span.text',
-        "total_equity": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section:nth-of-type(3) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(3) > td:nth-of-type(2) > span.text'
+        "total_revenue": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > span.text',
+        "gross_profit": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > span.text',
+        "operating_income": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(3) > td:nth-of-type(2) > span.text',
+        "net_income": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(4) > td:nth-of-type(2) > span.text',
+        "total_assets": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > span.text',
+        "total_liability": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > span.text',
+        "total_equity": '#js-main-container > section:nth-of-type(2) > div > section:nth-of-type(2) > section > div:nth-of-type(2) > div > table > tbody > tr:nth-of-type(3) > td:nth-of-type(2) > span.text'
     }
 
-    # Extract and assign the financial details
     for key, selector in css_selectors.items():
         span_tag = soup.select_one(selector)
         financial_details[key] = span_tag.get_text(strip=True) if span_tag else None
@@ -69,18 +67,18 @@ def get_financial_summary(url):
     return financial_summary, financial_details
 
 def main():
-    # URL of the company page
-    url = "https://in.investing.com/equities/uber-technologies-inc"
+    # Default URL for the company page
+    default_url = "https://in.investing.com/equities/uber-technologies-inc"
+    
+    # Use the URL passed as a command-line argument if provided
+    url = sys.argv[1] if len(sys.argv) > 1 else default_url
 
-    # Fetch the company information and financial details
     company_title, stock_price, financial_summary, financial_details = get_company_info(url)
 
-    # Create the output dictionary
     output_data = {
         "Company Title": company_title,
         "Stock Price": stock_price,
         "Financial Summary": financial_summary,
-        # Directly include financial details at the top level
         "Total Revenue": financial_details.get("total_revenue"),
         "Gross Profit": financial_details.get("gross_profit"),
         "Operating Income": financial_details.get("operating_income"),
@@ -90,15 +88,14 @@ def main():
         "Total Equity": financial_details.get("total_equity")
     }
 
-    # Ensure the data directory exists
-    if not os.path.exists("data"):
-        os.makedirs("data")
+    # Create the directory if it doesn't exist
+    output_dir = "data/investing_com"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
-    # Generate the filename with the timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"data/investing_com_{timestamp}.json"
+    # Generate filename based on company title
+    filename = os.path.join(output_dir, f"{company_title}.json")
 
-    # Write the output data to a JSON file
     with open(filename, "w") as json_file:
         json.dump(output_data, json_file, indent=4)
 

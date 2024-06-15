@@ -12,16 +12,6 @@ BOT_NAME = "scraper"
 SPIDER_MODULES = ["scraper.spiders"]
 NEWSPIDER_MODULE = "scraper.spiders"
 
-FEEDS = {
-    'data/%(name)s/%(name)s_%(time)s.json': {
-        'format': 'json',
-        'encoding': 'utf8',
-        'store_empty': False,
-        'indent': 4,
-    }
-}
-
-
 # Set a download delay (in seconds) between requests to avoid being detected as a bot
 DOWNLOAD_DELAY = 1.0  # Adjust based on target site responsiveness and rate limits
 
