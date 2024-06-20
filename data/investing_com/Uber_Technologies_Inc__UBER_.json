@@ -1,0 +1,34 @@
+{
+  "title": "Uber Technologies Inc (UBER)",
+  "stockPrice": "69.94",
+  "financial_summary": {
+    "financialSummary": "Uber Technologies, Inc. reported earnings results for the first quarter ended March 31, 2024. For the first quarter, the company reported sales was USD 10,131 million compared to USD 8,823 million a year ago. Net loss was USD 654 million compared to USD 157 million a year ago. Basic loss per share from continuing operations was USD 0.31 compared to USD 0.08 a year ago. Diluted loss per share from continuing operations was USD 0.32 compared to USD 0.08 a year ago.",
+    "total_revenue": "10131",
+    "gross_profit": "3280",
+    "operating_income": "181",
+    "net_income": "-654",
+    "total_assets": "39599",
+    "total_liabilities": "27100",
+    "total_equity": "12499",
+    "period_length": "0 Months",
+    "cashFromOperatingActivities": "1416",
+    "cashFromInvestingActivities": "-242",
+    "cashFromFinancingActivities": "-100",
+    "netChangeInCash": "980",
+    "ratios": {
+      "gross_margin": " 32.36%",
+      "operating_margin": " 4%",
+      "net_profit_margin": " 3.6%",
+      "return_on_investment": " 6%",
+      "quick_ratio": " 0.95",
+      "current_ratio": " 1.21",
+      "lt_debt_to_equity": " 85.52%",
+      "total_debt_to_equity": " 102.32%"
+    },
+    "cash_flows": {
+      "cash_flow": " 2.11",
+      "revenue": " 18.54",
+      "operating_cash_flow": " 14.17%"
+    }
+  }
+}

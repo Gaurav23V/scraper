@@ -1,0 +1,34 @@
+{
+  "title": "Zomato Ltd (ZOMT)",
+  "stockPrice": "198.00",
+  "financial_summary": {
+    "financialSummary": "Zomato Limited reported earnings results for the fourth quarter and full year ended March 31, 2024. For the fourth quarter, the company reported sales was INR 35,620 million compared to INR 20,560 million a year ago. Revenue was INR 37,970 million compared to INR 22,270 million a year ago. Net income was INR 1,750 million compared to net loss of INR 1,890 million a year ago. Basic earnings per share from continuing operations was INR 0.2 compared to basic loss per share from continuing operations of INR 0.23 a year ago. Diluted earnings per share from continuing operations was INR 0.2 compared to diluted loss per share from continuing operations of INR 0.23 a year ago.For the full year, sales was INR 121,140 million compared to INR 70,790 million a year ago. Revenue was INR 129,610 million compared to INR 77,610 million a year ago. Net income was INR 3,510 million compared to net loss of INR 9,710 million a year ago. Basic earnings per share from continuing operations was INR 0.41 compared to basic loss per share from continuing operations of INR 1.2 a year ago. Diluted earnings per share from continuing operations was INR 0.4 compared to diluted loss per share from continuing operations of INR 1.2 a year ago.",
+    "total_revenue": "35620",
+    "gross_profit": "22170",
+    "operating_income": "-540",
+    "net_income": "1750",
+    "total_assets": "233560",
+    "total_liabilities": "29500",
+    "total_equity": "204060",
+    "period_length": "0 Months",
+    "cashFromOperatingActivities": "",
+    "cashFromInvestingActivities": "",
+    "cashFromFinancingActivities": "",
+    "netChangeInCash": "",
+    "ratios": {
+      "gross_margin": " 62.51%",
+      "operating_margin": " -4%",
+      "net_profit_margin": " 2.9%",
+      "return_on_investment": " -1.95%",
+      "quick_ratio": " 2.46",
+      "current_ratio": " 2.62",
+      "lt_debt_to_equity": " -",
+      "total_debt_to_equity": " 3.67%"
+    },
+    "cash_flows": {
+      "cash_flow": " 0.75",
+      "revenue": " 14.04",
+      "operating_cash_flow": " 0.00%"
+    }
+  }
+}
